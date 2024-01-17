@@ -6,7 +6,7 @@
       <option *ngFor="let country of countryData " [value]="country._id">{{country.countryName}}</option>
     </select>
       <input id="inputCity" placeholder="Enter city name" formControlName="cityname">
-      <button *ngIf="isaddbutton" (click)="checkZone_AddCity()">Add City</button>
+      <button *ngIf="isaddbutton" (click)="add_City()">Add City</button>
       <button *ngIf="isupdatebutton" (click)="updateCity()">Update City</button>
     </form>
   </div>

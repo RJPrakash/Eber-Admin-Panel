@@ -79,8 +79,8 @@ app.get("/", async (req, res) => {
   res.json({
     success: true,
     message: "Welcome Admin, API is Working Fine!",
-    "City Data": 'https://eber.onrender.com/citydata',
-    "Vehicle Data": 'https://eber.onrender.com/vehicledata',
+    //"City Data": 'https://eber.onrender.com/citydata',
+    //"Vehicle Data": 'https://eber.onrender.com/vehicledata',
   });
 });
 

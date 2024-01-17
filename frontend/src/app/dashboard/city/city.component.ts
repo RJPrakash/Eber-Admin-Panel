@@ -296,67 +296,67 @@ export class CityComponent implements OnInit {
   }
 
   // To check the drawn Zone inside coordinates or not and add city in database.............
-  checkZone_AddCity() {
-      if(this.cityForm.value.countryname != ""){
-        const geocoder = new google.maps.Geocoder();
-        const input = document.getElementById("inputCity") as HTMLInputElement;
+  // checkZone_AddCity() {
+  //     if(this.cityForm.value.countryname != ""){
+  //       const geocoder = new google.maps.Geocoder();
+  //       const input = document.getElementById("inputCity") as HTMLInputElement;
 
-        geocoder.geocode({ address: input.value }, (results: any, status: any) => {
-          if (status === "OK") {
-            const location = results[0].geometry.location;
-            // console.log(location)
-            this.isInZone = google.maps.geometry.poly.containsLocation(
-              location,
-              this.polygon
-            );
+  //       geocoder.geocode({ address: input.value }, (results: any, status: any) => {
+  //         if (status === "OK") {
+  //           const location = results[0].geometry.location;
+  //           // console.log(location)
+  //           this.isInZone = google.maps.geometry.poly.containsLocation(
+  //             location,
+  //             this.polygon
+  //           );
 
-            if (this.isInZone == true) {
-              const polygonPath = this.polygon.getPath();
-              this.coordinates = polygonPath
-                .getArray()
-                .map((results: { lat: () => any; lng: () => any }) => ({
-                  lat: results.lat(),
-                  lng: results.lng(),
-                }));
-              console.log("Coordinates:", this.coordinates);
+  //           if (this.isInZone == true) {
+  //             const polygonPath = this.polygon.getPath();
+  //             this.coordinates = polygonPath
+  //               .getArray()
+  //               .map((results: { lat: () => any; lng: () => any }) => ({
+  //                 lat: results.lat(),
+  //                 lng: results.lng(),
+  //               }));
+  //             console.log("Coordinates:", this.coordinates);
 
-              const payload = {
-                country_id: this.selectedCountry,
-                city: input.value,
-                coordinates: this.coordinates,
-              };
-              console.log(payload);
+  //             const payload = {
+  //               country_id: this.selectedCountry,
+  //               city: input.value,
+  //               coordinates: this.coordinates,
+  //             };
+  //             console.log(payload);
 
-              // To add city in Database...............
-              this._city.addcity(payload).subscribe({
-                next: (response: any) => {
-                  this.cityData.push(response.city);
-                  // this.toastr.success(response.message);
-                  alert(response.message);
-                  this.getCItyData();
-                  this.getCountryNamefromDB();
-                  this.marker.setVisible(false); // Hide the marker
-                  this.marker.setPosition(null); // Clear the marker position
-                  this.polygon.setMap(null); // clear the polygon
-                  this.cityForm.reset(); // clear the form
-                },
-                error: (error) => {
-                  console.log(error.error.message);
-                  alert(error.error.message);
-                  // this.toastr.warning(error.error.message);
-                },
-              });
-            } else {
-              alert("Location not Inside Zone");
-            }
-          } else {
-            alert("please choose city and create a zone");
-          }
-        });
-      } else {
-        alert("All Fields are Required");
-      }
-    }
+  //             // To add city in Database...............
+  //             this._city.addcity(payload).subscribe({
+  //               next: (response: any) => {
+  //                 this.cityData.push(response.city);
+  //                 // this.toastr.success(response.message);
+  //                 alert(response.message);
+  //                 this.getCItyData();
+  //                 this.getCountryNamefromDB();
+  //                 this.marker.setVisible(false); // Hide the marker
+  //                 this.marker.setPosition(null); // Clear the marker position
+  //                 this.polygon.setMap(null); // clear the polygon
+  //                 this.cityForm.reset(); // clear the form
+  //               },
+  //               error: (error) => {
+  //                 console.log(error.error.message);
+  //                 alert(error.error.message);
+  //                 // this.toastr.warning(error.error.message);
+  //               },
+  //             });
+  //           } else {
+  //             alert("Location not Inside Zone");
+  //           }
+  //         } else {
+  //           alert("please choose city and create a zone");
+  //         }
+  //       });
+  //     } else {
+  //       alert("All Fields are Required");
+  //     }
+  //   }
 
 
 
@@ -482,5 +482,28 @@ export class CityComponent implements OnInit {
 
   resetTimer() {
     this.authService.resetInactivityTimer();
+  }
+  add_City(){
+    if(this.cityForm.value.countryname != ""){
+    const formData = new FormData();
+    formData.append('cityname', this.cityForm.value.cityname);
+
+    if(this.cityForm.valid) {
+      this._city.addcity(formData).subscribe({
+        next: (res) => {
+          this.cityData.push(res.vehicle);
+          this.cityForm.reset();
+          this.toastr.success(res.message);
+        },
+        error: (error) => {
+          console.log(error);
+          this.toastr.warning(error.error.message);
+        }
+      });
+  } 
+}
+  else {
+    this.toastr.warning("Please Fill Valid Details");
+  }
   }
 }

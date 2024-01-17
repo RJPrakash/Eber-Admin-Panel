@@ -18,7 +18,7 @@ export class CityService {
   }
 
 
-  addcity(cityData:any):Observable<any>{
+  addcity(cityData: FormData):Observable<any>{
     return this.http.post<any>(`${this.serverUrl}/cityadd`, cityData );
   }
 
